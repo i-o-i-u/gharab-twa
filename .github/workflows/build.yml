@@ -40,7 +40,7 @@ jobs:
         if: env.KEYSTORE_BASE64 != ''
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-        run: echo "$KEYSTORE_BASE64" | base64 -d > app/keystore.jks
+        run: echo "$KEYSTORE_BASE64" | base64 -d > $GITHUB_WORKSPACE/app/keystore.jks
 
       - name: Build Release APK
         if: env.KEYSTORE_BASE64 != ''
@@ -51,7 +51,7 @@ jobs:
           KEY_PASSWORD:      ${{ secrets.KEY_PASSWORD }}
         run: |
           ./gradlew assembleRelease --no-daemon \
-            -Pandroid.injected.signing.store.file=keystore.jks \
+            -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/app/keystore.jks \
             -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD \
             -Pandroid.injected.signing.key.alias=$KEY_ALIAS \
             -Pandroid.injected.signing.key.password=$KEY_PASSWORD
@@ -74,7 +74,7 @@ jobs:
           KEY_PASSWORD:      ${{ secrets.KEY_PASSWORD }}
         run: |
           ./gradlew bundleRelease --no-daemon \
-            -Pandroid.injected.signing.store.file=keystore.jks \
+            -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/app/keystore.jks \
             -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD \
             -Pandroid.injected.signing.key.alias=$KEY_ALIAS \
             -Pandroid.injected.signing.key.password=$KEY_PASSWORD
